@@ -50,9 +50,7 @@ public class LoginDisplay {
         passwordText.setMaxHeight(10);
         passwordText.setMaxWidth(100);
 
-        closeButton.setOnAction(e -> {
-            window.close();
-        });
+        closeButton.setOnAction(e -> window.close());
 
         loginButton.setOnAction(e -> {
             String username = usernameText.getText();

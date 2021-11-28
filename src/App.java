@@ -19,6 +19,8 @@ public class App extends Application {
         window = primaryStage;
         UIManager uiManager = new UIManager(window);
         uiManager.LoadLoginDisplay();
+
+        // Set up database
     }
 
 }
