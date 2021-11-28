@@ -3,14 +3,13 @@ package UIElements;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
-public class HomeDisplay {
+public class RecordManagerDisplay {
     private Stage window;
     // private UIManager uiManager;
 
-    public HomeDisplay(Stage primaryStage, UIManager uiMngr) {
-        window = primaryStage;
+    public RecordManagerDisplay(Stage primaryStage, UIManager uiMngr) {
         // uiManager = uiMngr;
-        // InitializeAttributes();
+        window = primaryStage;
     }
 
     // private void InitializeAttributes() {
@@ -22,7 +21,7 @@ public class HomeDisplay {
     // }
 
     public void LoadDisplay(BorderPane blayout) {
-        window.setTitle("Home");
+        window.setTitle("Record Manager");
         window.show();
     }
 
