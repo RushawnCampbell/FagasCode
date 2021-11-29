@@ -1,33 +1,48 @@
 package UIElements;
 
+import LogicManagers.RecordManager;
 import Security.Authenticator;
 import Security.User;
 import Security.User.UserType;
 import UIElements.UIManager;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 public class UIManager {
     // Attributes
     private Stage window;
-    private LoginDisplay loginDisplay;
-    private HomeDisplay homeDisplay;
-    private RecordManagerDisplay recordManagerDisplay;
-    private User currentUser;
-    private Authenticator auth;
-
     private Scene scene;
     private BorderPane layout;
     private VBox vLayout;
-    private Button manageRecords, manageReq, manageChangeReq, reports, serviceList, changeReq, logout;
+    private Button manageRecords, manageRequest, manageChangeReq, logout, reports, serviceList, changeReq, homeButton;
+
+    private LoginDisplay loginDisplay;
+    private HomeDisplay homeDisplay;
+    private RecordManagerDisplay recordManagerDisplay;
+    private ServiceManagerDisplay serviceManagerDisplay;
+    private ReportGeneratorDisplay reportGeneratorDisplay;
+    private ChangeReqManagerDisplay changeReqManagerDisplay;
+    private ChangeRequestDisplay changeRequestDisplay;
+    private ServiceListDisplay serviceListDisplay;
+
+    private User currentUser;
+    private Authenticator auth;
+    private RecordManager recordManager;
 
     public UIManager(Stage primaryStage) {
         window = primaryStage;
         auth = new Authenticator();
+        recordManager = new RecordManager();
 
     }
 
@@ -45,12 +60,33 @@ public class UIManager {
     }
 
     public void LoadRecordManagerDisplay() {
-        recordManagerDisplay = new RecordManagerDisplay(window, this);
+        recordManagerDisplay = new RecordManagerDisplay(window, this, recordManager);
         recordManagerDisplay.LoadDisplay(layout);
     }
 
     public void LoadServiceManagerDisplay() {
+        serviceManagerDisplay = new ServiceManagerDisplay(window, this);
+        serviceManagerDisplay.LoadDisplay(layout);
+    }
 
+    public void LoadReportGeneratorDisplay() {
+        reportGeneratorDisplay = new ReportGeneratorDisplay(window, this);
+        reportGeneratorDisplay.LoadDisplay(layout);
+    }
+
+    public void LoadChangeReqManagerDisplay() {
+        changeReqManagerDisplay = new ChangeReqManagerDisplay(window, this);
+        changeReqManagerDisplay.LoadDisplay(layout);
+    }
+
+    public void LoadChangeRequestDisplay() {
+        changeRequestDisplay = new ChangeRequestDisplay(window, this);
+        changeRequestDisplay.LoadDisplay(layout);
+    }
+
+    public void LoadServiceListDisplay() {
+        serviceListDisplay = new ServiceListDisplay(window, this);
+        serviceListDisplay.LoadDisplay(layout);
     }
 
     // this class receive username and password from login and seds it to
@@ -68,49 +104,90 @@ public class UIManager {
         }
     }
 
+    private void Logout() {
+        boolean response = StatusMessage.ConfirmDisplay("Are you sure you want to Logout?");
+
+        if (response) {
+            currentUser = null;
+            LoadLoginDisplay();
+        }
+
+    }
+
     private void ConfigureWindow() {
-        layout = new BorderPane();
-        scene = new Scene(layout, 900, 750);
         vLayout = new VBox();
+        vLayout.setAlignment(Pos.TOP_CENTER);
+        vLayout.setSpacing(10);
+        vLayout.setMaxWidth(250);
+        vLayout.setBackground(new Background(new BackgroundFill(Color.LIGHTSKYBLUE, CornerRadii.EMPTY, Insets.EMPTY)));
+
+        layout = new BorderPane();
+        layout.setLeft(vLayout);
+        layout.setBackground(new Background(new BackgroundFill(Color.LIGHTBLUE, CornerRadii.EMPTY, Insets.EMPTY)));
+
+        scene = new Scene(layout, 600, 600);
+
+        Label sidebarLabel = new Label("NAVIGATION MENU");
+        sidebarLabel.setPadding(new Insets(15, 0, 0, 15));
+
         manageRecords = new Button("Manage Customer Records");
-        manageReq = new Button("Manage Service Request");
+        manageRequest = new Button("Manage Service Request");
         manageChangeReq = new Button("Manage Change Requests");
         logout = new Button("Logout");
         reports = new Button("Generate Reports");
         serviceList = new Button("Generate Service List");
         changeReq = new Button("Create Change Request");
-        layout = new BorderPane();
-        scene = new Scene(layout, 600, 600);
-        Button homeButton = new Button("Home");
+        homeButton = new Button("Home");
 
-        layout.setLeft(vLayout);
-        vLayout.setAlignment(Pos.CENTER);
+        homeButton.setOnAction(e -> LoadHomeDisplay());
+        homeButton.setMaxSize(vLayout.getMaxWidth(), 15);
+
+        manageRecords.setOnAction(e -> LoadRecordManagerDisplay());
+        manageRecords.setMaxSize(vLayout.getMaxWidth(), 15);
+
+        reports.setOnAction(e -> LoadReportGeneratorDisplay());
+        reports.setMaxSize(vLayout.getMaxWidth(), 15);
+
+        manageRequest.setOnAction(e -> LoadServiceManagerDisplay());
+        manageRequest.setMaxSize(vLayout.getMaxWidth(), 15);
+
+        manageChangeReq.setOnAction(e -> LoadChangeReqManagerDisplay());
+        manageChangeReq.setMaxSize(vLayout.getMaxWidth(), 15);
+
+        serviceList.setOnAction(e -> LoadServiceListDisplay());
+        serviceList.setMaxSize(vLayout.getMaxWidth(), 15);
+
+        changeReq.setOnAction(e -> LoadChangeRequestDisplay());
+        changeReq.setMaxSize(vLayout.getMaxWidth(), 15);
+
+        logout.setOnAction(e -> Logout());
+        logout.setMaxSize(vLayout.getMaxWidth(), 15);
+
+        vLayout.getChildren().add(sidebarLabel);
         vLayout.getChildren().add(homeButton);
         switch (currentUser.getUserType().toString()) {
             case ("CEO"):
                 vLayout.getChildren().add(reports);
                 vLayout.getChildren().add(manageRecords);
-                vLayout.getChildren().add(manageReq);
+                vLayout.getChildren().add(manageRequest);
                 vLayout.getChildren().add(manageChangeReq);
                 vLayout.getChildren().add(serviceList);
                 vLayout.getChildren().add(logout);
                 break;
             case ("Secretary"):
                 vLayout.getChildren().add(manageRecords);
-                vLayout.getChildren().add(manageReq);
+                vLayout.getChildren().add(manageRequest);
                 vLayout.getChildren().add(manageChangeReq);
                 vLayout.getChildren().add(serviceList);
                 vLayout.getChildren().add(logout);
                 break;
             case ("Cashier"):
-                vLayout.getChildren().add(manageReq);
+                vLayout.getChildren().add(manageRequest);
                 vLayout.getChildren().add(changeReq);
                 vLayout.getChildren().add(logout);
                 System.out.println("CEO");
                 break;
         }
-        manageRecords.setOnAction(e -> LoadRecordManagerDisplay());
-        homeButton.setOnAction(e -> LoadHomeDisplay());
 
         window.setScene(scene);
     }
