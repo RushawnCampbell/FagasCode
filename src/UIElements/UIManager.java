@@ -1,6 +1,9 @@
 package UIElements;
 
+import LogicManagers.ChangeRequestManager;
 import LogicManagers.RecordManager;
+import LogicManagers.ServiceManager;
+import PopUpDisplays.StatusMessage;
 import Security.Authenticator;
 import Security.User;
 import Security.User.UserType;
@@ -38,12 +41,15 @@ public class UIManager {
     private User currentUser;
     private Authenticator auth;
     private RecordManager recordManager;
+    private ServiceManager serviceManager;
+    private ChangeRequestManager changeRequestManager;
 
     public UIManager(Stage primaryStage) {
         window = primaryStage;
         auth = new Authenticator();
         recordManager = new RecordManager();
-
+        serviceManager = new ServiceManager();
+        changeRequestManager = new ChangeRequestManager();
     }
 
     // creates login display class and sets the scene to the login display.
@@ -65,7 +71,7 @@ public class UIManager {
     }
 
     public void LoadServiceManagerDisplay() {
-        serviceManagerDisplay = new ServiceManagerDisplay(window, this);
+        serviceManagerDisplay = new ServiceManagerDisplay(window, this, serviceManager);
         serviceManagerDisplay.LoadDisplay(layout);
     }
 
@@ -75,17 +81,17 @@ public class UIManager {
     }
 
     public void LoadChangeReqManagerDisplay() {
-        changeReqManagerDisplay = new ChangeReqManagerDisplay(window, this);
+        changeReqManagerDisplay = new ChangeReqManagerDisplay(window, this, changeRequestManager);
         changeReqManagerDisplay.LoadDisplay(layout);
     }
 
     public void LoadChangeRequestDisplay() {
-        changeRequestDisplay = new ChangeRequestDisplay(window, this);
+        changeRequestDisplay = new ChangeRequestDisplay(window, this, changeRequestManager);
         changeRequestDisplay.LoadDisplay(layout);
     }
 
     public void LoadServiceListDisplay() {
-        serviceListDisplay = new ServiceListDisplay(window, this);
+        serviceListDisplay = new ServiceListDisplay(window, this, serviceManager);
         serviceListDisplay.LoadDisplay(layout);
     }
 
@@ -136,7 +142,7 @@ public class UIManager {
         logout = new Button("Logout");
         reports = new Button("Generate Reports");
         serviceList = new Button("Generate Service List");
-        changeReq = new Button("Create Change Request");
+        changeReq = new Button("Change Requests");
         homeButton = new Button("Home");
 
         homeButton.setOnAction(e -> LoadHomeDisplay());
@@ -174,18 +180,17 @@ public class UIManager {
                 vLayout.getChildren().add(serviceList);
                 vLayout.getChildren().add(logout);
                 break;
-            case ("Secretary"):
+            case ("SECRETARY"):
                 vLayout.getChildren().add(manageRecords);
                 vLayout.getChildren().add(manageRequest);
                 vLayout.getChildren().add(manageChangeReq);
                 vLayout.getChildren().add(serviceList);
                 vLayout.getChildren().add(logout);
                 break;
-            case ("Cashier"):
+            case ("CASHIER"):
                 vLayout.getChildren().add(manageRequest);
                 vLayout.getChildren().add(changeReq);
                 vLayout.getChildren().add(logout);
-                System.out.println("CEO");
                 break;
         }
 
