@@ -1,6 +1,7 @@
 package UIElements;
 
 import LogicManagers.RecordManager;
+import PopUpDisplays.CreateRecordDisplay;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -13,7 +14,7 @@ import javafx.stage.Stage;
 
 public class RecordManagerDisplay {
     private Stage window;
-    private RecordManager recordManager;
+    // private RecordManager recordManager;
     // private UIManager uiManager;
 
     private Label titleLabel, idLabel, nameLabel, contactLabel;
@@ -24,13 +25,13 @@ public class RecordManagerDisplay {
 
     public RecordManagerDisplay(Stage primaryStage, UIManager uiMngr, RecordManager recMngr) {
         // uiManager = uiMngr;
+        // recordManager = recMngr;
         window = primaryStage;
         InitializeAttributes();
-        recordManager = recMngr;
     }
 
     private void InitializeAttributes() {
-        titleLabel = new Label("Record Manager");
+        titleLabel = new Label("Customer Record Manager");
         idLabel = new Label("ID");
         nameLabel = new Label("Customer Name");
         contactLabel = new Label("Contact Number");
@@ -55,6 +56,8 @@ public class RecordManagerDisplay {
         centerLayout.setSpacing(20);
 
         layout.setCenter(centerLayout);
+
+        createRecord.setOnAction(e -> CreateRecordDisplay.LoadDisplay());
     }
 
     private void AddTable() {
@@ -62,7 +65,7 @@ public class RecordManagerDisplay {
         recordTable.add(nameLabel, 1, 0, 1, 1);
         recordTable.add(contactLabel, 2, 0, 1, 1);
 
-        for (int i = 1; i < 30; i++) {
+        for (int i = 1; i < 20; i++) {
             Label temp = new Label(String.valueOf(i));
             recordTable.add(temp, 0, i, 1, 1);
 
@@ -74,9 +77,6 @@ public class RecordManagerDisplay {
 
             Button viewButton = new Button("View");
             recordTable.add(viewButton, 3, i, 1, 1);
-
-            Button modButton = new Button("Modify");
-            recordTable.add(modButton, 4, i, 1, 1);
         }
     }
 
