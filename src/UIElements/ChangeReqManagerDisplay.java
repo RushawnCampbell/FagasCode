@@ -1,6 +1,6 @@
 package UIElements;
 
-import LogicManagers.ChangeRequestManager;
+import Logic.ChangeRequestManager;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;

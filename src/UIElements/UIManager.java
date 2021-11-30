@@ -1,8 +1,8 @@
 package UIElements;
 
-import LogicManagers.ChangeRequestManager;
-import LogicManagers.RecordManager;
-import LogicManagers.ServiceManager;
+import Logic.ChangeRequestManager;
+import Logic.RecordManager;
+import Logic.ServiceManager;
 import PopUpDisplays.StatusMessage;
 import Security.Authenticator;
 import Security.User;

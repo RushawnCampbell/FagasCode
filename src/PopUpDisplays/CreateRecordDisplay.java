@@ -1,5 +1,7 @@
 package PopUpDisplays;
 
+import java.util.ArrayList;
+
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -12,10 +14,11 @@ import javafx.stage.Stage;
 
 public class CreateRecordDisplay {
 
-    public static void LoadDisplay() {
+    public static ArrayList<String> LoadDisplay() {
         // Setting up window properties.
+        ArrayList<String> list = new ArrayList<String>();
         Stage window = new Stage();
-        window.setTitle("ALERT");
+        window.setTitle("Create Customer Record");
         window.initModality(Modality.APPLICATION_MODAL);
         window.setMinWidth(250);
 
@@ -36,11 +39,21 @@ public class CreateRecordDisplay {
         TextField tf_address2 = new TextField();
         tf_address2.setPromptText("Address Line 2");
         TextField tf_parish = new TextField();
-        tf_parish.setPromptText("parish");
+        tf_parish.setPromptText("Parish");
 
         VBox layout = new VBox();
 
         Button b_create = new Button("CREATE");
+        b_create.setOnAction(e -> {
+            list.add(tf_fName.getText());
+            list.add(tf_lName.getText());
+            list.add(tf_email.getText());
+            list.add(tf_contact.getText());
+            list.add(tf_address1.getText());
+            list.add(tf_address2.getText());
+            list.add(tf_parish.getText());
+            window.close();
+        });
 
         Button cancel_b = new Button("CANCEL");
         cancel_b.setOnAction(e -> window.close());
@@ -66,6 +79,7 @@ public class CreateRecordDisplay {
         Scene scene = new Scene(layout);
 
         window.setScene(scene);
-        window.show();
+        window.showAndWait();
+        return list;
     }
 }

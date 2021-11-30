@@ -2,7 +2,7 @@ package UIElements;
 
 import java.util.ArrayList;
 
-import LogicManagers.ServiceManager;
+import Logic.ServiceManager;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -17,7 +17,7 @@ import javafx.stage.Stage;
 public class ServiceListDisplay {
 
     // private UIManager uiManager;
-    private ServiceManager serviceManager;
+    // private ServiceManager serviceManager;
     private Stage window;
     private Label titleLabel, idLabel, nameLabel, typeLabel, statusLabel, instructionLabel;
     private Button createRecord;
@@ -29,7 +29,7 @@ public class ServiceListDisplay {
     public ServiceListDisplay(Stage primaryStage, UIManager uiMngr, ServiceManager srvcMngr) {
         window = primaryStage;
         // uiManager = uiMngr;
-        serviceManager = srvcMngr;
+        // serviceManager = srvcMngr;
         InitializeAttributes();
     }
 

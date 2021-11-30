@@ -1,7 +1,12 @@
 package UIElements;
 
-import LogicManagers.RecordManager;
+import java.util.ArrayList;
+
+import Logic.CustomerRecord;
+import Logic.RecordManager;
 import PopUpDisplays.CreateRecordDisplay;
+import PopUpDisplays.RecordView;
+import PopUpDisplays.StatusMessage;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -13,8 +18,9 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 public class RecordManagerDisplay {
+    private ArrayList<String> list;
     private Stage window;
-    // private RecordManager recordManager;
+    private RecordManager recordManager;
     // private UIManager uiManager;
 
     private Label titleLabel, idLabel, nameLabel, contactLabel;
@@ -25,7 +31,7 @@ public class RecordManagerDisplay {
 
     public RecordManagerDisplay(Stage primaryStage, UIManager uiMngr, RecordManager recMngr) {
         // uiManager = uiMngr;
-        // recordManager = recMngr;
+        recordManager = recMngr;
         window = primaryStage;
         InitializeAttributes();
     }
@@ -57,26 +63,59 @@ public class RecordManagerDisplay {
 
         layout.setCenter(centerLayout);
 
-        createRecord.setOnAction(e -> CreateRecordDisplay.LoadDisplay());
+        // ArrayList<String> list;
+        createRecord.setOnAction(e -> {
+            this.list = CreateRecordDisplay.LoadDisplay();
+            SubmitRecord(list);
+        });
+
+    }
+
+    private void SubmitRecord(ArrayList<String> list) {
+        int res = recordManager.CreateRecord(list);
+
+        if (res == 1) {
+            recordManager.CreateRecord(list);
+            StatusMessage.DisplayMessage("Customer Record was created successfully.");
+        } else {
+            StatusMessage.DisplayMessage("Customer Record was not successfully created.");
+        }
+
     }
 
     private void AddTable() {
         recordTable.add(idLabel, 0, 0, 1, 1);
         recordTable.add(nameLabel, 1, 0, 1, 1);
         recordTable.add(contactLabel, 2, 0, 1, 1);
+        ArrayList<CustomerRecord> list = RecordManager.recordList;
 
-        for (int i = 1; i < 20; i++) {
-            Label temp = new Label(String.valueOf(i));
+        int a = 0;
+        for (int i = 1; i < list.size(); i++) {
+            ArrayList<String> info = new ArrayList<String>();
+            info.add(String.valueOf(list.get(a).getId()));
+            info.add(list.get(a).getFirst());
+            info.add(list.get(a).getLast());
+            info.add(list.get(a).getPhone());
+            info.add(list.get(a).getAd1());
+            info.add(list.get(a).getAd2());
+            info.add(list.get(a).getParish());
+            info.add(list.get(a).getEmail());
+
+            Label temp = new Label(String.valueOf(list.get(a).customerID));
             recordTable.add(temp, 0, i, 1, 1);
 
-            temp = new Label("Customer" + i);
+            temp = new Label(list.get(a).getFirst() + list.get(a).getLast());
             recordTable.add(temp, 1, i, 1, 1);
 
-            temp = new Label("Contact" + i);
+            temp = new Label(list.get(a).getPhone());
             recordTable.add(temp, 2, i, 1, 1);
 
             Button viewButton = new Button("View");
+            viewButton.setOnAction(e -> {
+                RecordView.LoadDisplay(info);
+            });
             recordTable.add(viewButton, 3, i, 1, 1);
+            a++;
         }
     }
 

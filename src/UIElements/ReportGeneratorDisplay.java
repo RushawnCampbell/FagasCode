@@ -6,7 +6,7 @@ import javafx.stage.Stage;
 public class ReportGeneratorDisplay {
 
     private Stage window;
-    private BorderPane sceneLayout;
+    // private BorderPane sceneLayout;
     // private UIManager uiManager;
 
     public ReportGeneratorDisplay(Stage primaryStage, UIManager uiMngr) {
@@ -24,7 +24,7 @@ public class ReportGeneratorDisplay {
     // }
 
     public void LoadDisplay(BorderPane blayout) {
-        sceneLayout = blayout;
+        // sceneLayout = blayout;
         window.setTitle("Report Generator");
         window.show();
     }

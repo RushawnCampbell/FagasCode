@@ -1,6 +1,6 @@
 package UIElements;
 
-import LogicManagers.ServiceManager;
+import Logic.ServiceManager;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
