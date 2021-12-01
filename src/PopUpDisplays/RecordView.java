@@ -2,6 +2,7 @@ package PopUpDisplays;
 
 import java.util.ArrayList;
 
+import Logic.RecordManager;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -11,11 +12,13 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 public class RecordView {
+    private boolean isModified;
 
-    public static ArrayList<String> LoadDisplay(ArrayList<String> record) {
+    public boolean LoadDisplay(ArrayList<String> record, RecordManager recManager) {
+        isModified = false;
         ArrayList<String> list = new ArrayList<String>();
         Stage window = new Stage();
-        window.setTitle("Customer Records");
+        window.setTitle("Customer Record");
         window.initModality(Modality.APPLICATION_MODAL);
         window.setMinWidth(250);
 
@@ -28,26 +31,19 @@ public class RecordView {
         Label l_id2 = new Label("Record ID: " + record.get(0));
         Label l_fName = new Label("First Name: " + record.get(1));
         Label l_lName = new Label("Last Name: " + record.get(2));
-        Label l_email = new Label("Email: " + record.get(3));
-        Label l_contact = new Label("Contact Number: " + record.get(4));
-        Label l_address1 = new Label("Address Line 1: " + record.get(5));
-        Label l_address2 = new Label("Address Line 2: " + record.get(6));
-        Label l_parish = new Label("Parish: " + record.get(7));
+        Label l_email = new Label("Email: " + record.get(7));
+        Label l_contact = new Label("Contact Number: " + record.get(3));
+        Label l_address1 = new Label("Address Line 1: " + record.get(4));
+        Label l_address2 = new Label("Address Line 2: " + record.get(5));
+        Label l_parish = new Label("Parish: " + record.get(6));
 
-        TextField tf_fName = new TextField();
-        tf_fName.setPromptText("First Name");
-        TextField tf_lName = new TextField();
-        tf_lName.setPromptText("Last Name");
-        TextField tf_email = new TextField();
-        tf_email.setPromptText("Email");
-        TextField tf_contact = new TextField();
-        tf_contact.setPromptText("Contact Number");
-        TextField tf_address1 = new TextField();
-        tf_address1.setPromptText("Address Line 2");
-        TextField tf_address2 = new TextField();
-        tf_address2.setPromptText("Address Line 2");
-        TextField tf_parish = new TextField();
-        tf_parish.setPromptText("Parish");
+        TextField tf_fName = new TextField(record.get(1));
+        TextField tf_lName = new TextField(record.get(2));
+        TextField tf_email = new TextField(record.get(7));
+        TextField tf_contact = new TextField(record.get(3));
+        TextField tf_address1 = new TextField(record.get(4));
+        TextField tf_address2 = new TextField(record.get(5));
+        TextField tf_parish = new TextField(record.get(6));
 
         Button b_modify = new Button("MODIFY");
         b_modify.setOnAction(e -> window.setScene(textScene));
@@ -56,13 +52,22 @@ public class RecordView {
 
         Button b_submit = new Button("SUBMIT");
         b_submit.setOnAction(e -> {
-            list.add(tf_fName.getText());
-            list.add(tf_lName.getText());
-            list.add(tf_email.getText());
-            list.add(tf_contact.getText());
-            list.add(tf_address1.getText());
-            list.add(tf_address2.getText());
-            list.add(tf_parish.getText());
+            boolean res = StatusMessage.ConfirmDisplay("Are you sure you want to save these Changes?");
+
+            if (res) {
+                list.add(record.get(0));
+                list.add(tf_fName.getText());
+                list.add(tf_lName.getText());
+                list.add(tf_email.getText());
+                list.add(tf_contact.getText());
+                list.add(tf_address1.getText());
+                list.add(tf_address2.getText());
+                list.add(tf_parish.getText());
+                recManager.ModifyRecord(list);
+                setModified();
+                window.close();
+            }
+
         });
         Button cancel_b = new Button("CANCEL");
         cancel_b.setOnAction(e -> window.setScene(viewScene));
@@ -95,6 +100,10 @@ public class RecordView {
 
         window.setScene(viewScene);
         window.showAndWait();
-        return list;
+        return isModified;
+    }
+
+    private void setModified() {
+        isModified = true;
     }
 }

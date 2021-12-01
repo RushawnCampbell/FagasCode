@@ -2,7 +2,10 @@ package UIElements;
 
 import java.util.ArrayList;
 
+import Logic.CustomerRecord;
+import Logic.RecordManager;
 import Logic.ServiceManager;
+import Logic.ServiceRequest;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -72,28 +75,31 @@ public class ServiceListDisplay {
         table.add(nameLabel, 1, 0, 1, 1);
         table.add(typeLabel, 2, 0, 1, 1);
         table.add(statusLabel, 3, 0, 1, 1);
+        ArrayList<ServiceRequest> list = ServiceManager.serviceReqList;
 
-        for (int i = 1; i < 30; i++) {
-            Label temp = new Label("Customer" + i);
-            table.add(temp, 1, i, 1, 1);
+        int row = 1;
+        for (int i = 0; i < list.size(); i++) {
+            if (list.get(i).getStatus().equals("Incomplete")) {
+                String name = "";
+                for (CustomerRecord rec : RecordManager.recordList) {
+                    if (rec.getId() == list.get(i).getCustomerId()) {
+                        name = rec.getFirst() + " " + rec.getLast();
+                    }
+                }
+                CheckBox select = new CheckBox(String.valueOf(list.get(i).getServiceId()));
+                select.setOnAction(e -> AddCheckBox(select));
+                table.add(select, 0, row, 1, 1);
 
-            if (i % 2 == 0) {
-                temp = new Label("Gas Delivery");
-            } else {
-                temp = new Label("Equipment Repair");
+                Label temp = new Label(name);
+                table.add(temp, 1, row, 1, 1);
+
+                temp = new Label(list.get(i).getType());
+                table.add(temp, 2, row, 1, 1);
+
+                temp = new Label(list.get(i).getStatus());
+                table.add(temp, 3, row, 1, 1);
+                row++;
             }
-            table.add(temp, 2, i, 1, 1);
-
-            if (i % 3 == 0) {
-                temp = new Label("Complete");
-            } else {
-                temp = new Label("Incomplete");
-            }
-            table.add(temp, 3, i, 1, 1);
-
-            CheckBox select = new CheckBox(String.valueOf(i));
-            select.setOnAction(e -> AddCheckBox(select));
-            table.add(select, 0, i, 1, 1);
         }
     }
 

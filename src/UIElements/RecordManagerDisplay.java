@@ -21,19 +21,21 @@ public class RecordManagerDisplay {
     private ArrayList<String> list;
     private Stage window;
     private RecordManager recordManager;
-    // private UIManager uiManager;
+    private UIManager uiManager;
 
     private Label titleLabel, idLabel, nameLabel, contactLabel;
     private Button createRecord;
     private GridPane recordTable;
     private ScrollPane scroll;
     private VBox centerLayout;
+    private RecordView recordView;
 
     public RecordManagerDisplay(Stage primaryStage, UIManager uiMngr, RecordManager recMngr) {
-        // uiManager = uiMngr;
+        uiManager = uiMngr;
         recordManager = recMngr;
         window = primaryStage;
         InitializeAttributes();
+        recordView = new RecordView();
     }
 
     private void InitializeAttributes() {
@@ -66,7 +68,8 @@ public class RecordManagerDisplay {
         // ArrayList<String> list;
         createRecord.setOnAction(e -> {
             this.list = CreateRecordDisplay.LoadDisplay();
-            SubmitRecord(list);
+            if (this.list.size() > 0)
+                SubmitRecord(list);
         });
 
     }
@@ -75,12 +78,11 @@ public class RecordManagerDisplay {
         int res = recordManager.CreateRecord(list);
 
         if (res == 1) {
-            recordManager.CreateRecord(list);
             StatusMessage.DisplayMessage("Customer Record was created successfully.");
         } else {
             StatusMessage.DisplayMessage("Customer Record was not successfully created.");
         }
-
+        uiManager.LoadRecordManagerDisplay();
     }
 
     private void AddTable() {
@@ -90,7 +92,7 @@ public class RecordManagerDisplay {
         ArrayList<CustomerRecord> list = RecordManager.recordList;
 
         int a = 0;
-        for (int i = 1; i < list.size(); i++) {
+        for (int i = 1; i < list.size() + 1; i++) {
             ArrayList<String> info = new ArrayList<String>();
             info.add(String.valueOf(list.get(a).getId()));
             info.add(list.get(a).getFirst());
@@ -101,10 +103,10 @@ public class RecordManagerDisplay {
             info.add(list.get(a).getParish());
             info.add(list.get(a).getEmail());
 
-            Label temp = new Label(String.valueOf(list.get(a).customerID));
+            Label temp = new Label(String.valueOf(list.get(a).getId()));
             recordTable.add(temp, 0, i, 1, 1);
 
-            temp = new Label(list.get(a).getFirst() + list.get(a).getLast());
+            temp = new Label(list.get(a).getFirst() + " " + list.get(a).getLast());
             recordTable.add(temp, 1, i, 1, 1);
 
             temp = new Label(list.get(a).getPhone());
@@ -112,7 +114,9 @@ public class RecordManagerDisplay {
 
             Button viewButton = new Button("View");
             viewButton.setOnAction(e -> {
-                RecordView.LoadDisplay(info);
+                boolean isModed = recordView.LoadDisplay(info, recordManager);
+                if (isModed)
+                    uiManager.LoadRecordManagerDisplay();
             });
             recordTable.add(viewButton, 3, i, 1, 1);
             a++;

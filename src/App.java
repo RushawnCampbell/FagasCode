@@ -22,3 +22,16 @@ public class App extends Application {
         uiManager.LoadLoginDisplay();
     }
 }
+
+/*
+ * CREATE TABLE servicerequest(
+ * id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+ * custid varchar(255) NOT NULL,
+ * type varchar(255) NOT NULL,
+ * price FLOAT, NOT NULL
+ * comments TEXT,
+ * status varchar(255) NOT NULL,
+ * date_created DATETIME
+ * );
+ * 
+ */

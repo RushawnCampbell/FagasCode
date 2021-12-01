@@ -1,6 +1,13 @@
 package UIElements;
 
+import java.util.ArrayList;
+
+import Logic.CustomerRecord;
+import Logic.RecordManager;
 import Logic.ServiceManager;
+import Logic.ServiceRequest;
+import PopUpDisplays.CreateServiceDisplay;
+import PopUpDisplays.ServiceView;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -13,19 +20,19 @@ import javafx.stage.Stage;
 
 public class ServiceManagerDisplay {
 
-    // private UIManager uiManager;
-    // private ServiceManager serviceManager;
+    private UIManager uiManager;
+    private ServiceManager serviceManager;
     private Stage window;
     private Label titleLabel, idLabel, nameLabel, typeLabel, statusLabel;
-    private Button createRecord;
+    private Button createService;
     private GridPane table;
     private ScrollPane scroll;
     private VBox centerLayout;
 
     public ServiceManagerDisplay(Stage primaryStage, UIManager uiMngr, ServiceManager srvcMngr) {
         window = primaryStage;
-        // uiManager = uiMngr;
-        // serviceManger = srvcMngr;
+        uiManager = uiMngr;
+        serviceManager = srvcMngr;
         InitializeAttributes();
     }
 
@@ -36,7 +43,7 @@ public class ServiceManagerDisplay {
         typeLabel = new Label("Service Type");
         statusLabel = new Label("Status");
 
-        createRecord = new Button("Create New Service Request");
+        createService = new Button("Create New Service Request");
         table = new GridPane();
         centerLayout = new VBox();
         scroll = new ScrollPane(table);
@@ -51,7 +58,16 @@ public class ServiceManagerDisplay {
         scroll.setMaxHeight(500);
         scroll.setPadding(new Insets(10, 10, 10, 10));
 
-        centerLayout.getChildren().addAll(titleLabel, createRecord, scroll);
+        createService.setOnAction(e -> {
+            CreateServiceDisplay createService = new CreateServiceDisplay();
+            ArrayList<String> info = createService.LoadDisplay();
+            if (info.size() > 0) {
+                serviceManager.CreateService(info);
+                uiManager.LoadServiceManagerDisplay();
+            }
+        });
+
+        centerLayout.getChildren().addAll(titleLabel, createService, scroll);
         centerLayout.setAlignment(Pos.TOP_CENTER);
         centerLayout.setSpacing(20);
 
@@ -63,30 +79,50 @@ public class ServiceManagerDisplay {
         table.add(nameLabel, 1, 0, 1, 1);
         table.add(typeLabel, 2, 0, 1, 1);
         table.add(statusLabel, 3, 0, 1, 1);
+        ArrayList<ServiceRequest> list = ServiceManager.serviceReqList;
 
-        for (int i = 1; i < 30; i++) {
-            Label temp = new Label(String.valueOf(i));
-            table.add(temp, 0, i, 1, 1);
+        int row = 1;
+        for (int i = 0; i < list.size(); i++) {
+            ArrayList<String> info = new ArrayList<String>();
+            info.add(String.valueOf(list.get(i).getServiceId()));
+            info.add(String.valueOf(list.get(i).getCustomerId()));
+            info.add(list.get(i).getType());
+            info.add(String.valueOf(list.get(i).getPrice()));
+            info.add(String.valueOf(list.get(i).getQuantity()));
+            info.add(list.get(i).getComments());
+            info.add(list.get(i).getStatus());
+            info.add(list.get(i).getDateCreated().toString());
 
-            temp = new Label("Customer" + i);
-            table.add(temp, 1, i, 1, 1);
-
-            if (i % 2 == 0) {
-                temp = new Label("Gas Delivery");
-            } else {
-                temp = new Label("Equipment Repair");
+            String name = "";
+            for (CustomerRecord rec : RecordManager.recordList) {
+                if (rec.getId() == list.get(i).getCustomerId()) {
+                    name = rec.getFirst() + " " + rec.getLast();
+                }
             }
-            table.add(temp, 2, i, 1, 1);
 
-            if (i % 3 == 0) {
-                temp = new Label("Complete");
-            } else {
-                temp = new Label("Incomplete");
-            }
-            table.add(temp, 3, i, 1, 1);
+            Label temp = new Label(String.valueOf(list.get(i).getServiceId()));
+            table.add(temp, 0, row, 1, 1);
 
+            temp = new Label(name);
+            table.add(temp, 1, row, 1, 1);
+
+            temp = new Label(list.get(i).getType());
+            table.add(temp, 2, row, 1, 1);
+
+            temp = new Label(list.get(i).getStatus());
+            table.add(temp, 3, row, 1, 1);
+
+            ServiceRequest service = list.get(i);
             Button viewButton = new Button("View");
-            table.add(viewButton, 4, i, 1, 1);
+            viewButton.setOnAction(e -> {
+                ServiceView serviceView = new ServiceView();
+                boolean resp = serviceView.LoadDisplay(service, serviceManager);
+
+                if (resp)
+                    uiManager.LoadServiceManagerDisplay();
+            });
+            table.add(viewButton, 4, row, 1, 1);
+            row++;
         }
     }
 

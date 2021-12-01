@@ -23,7 +23,6 @@ public class CreateRecordDisplay {
         window.setMinWidth(250);
 
         Label title_l = new Label("Create A New Customer Record");
-
         Label descr_l = new Label("Enter the appropriate Information into the fields provided and click 'Create'.");
 
         TextField tf_fName = new TextField();
@@ -45,14 +44,17 @@ public class CreateRecordDisplay {
 
         Button b_create = new Button("CREATE");
         b_create.setOnAction(e -> {
-            list.add(tf_fName.getText());
-            list.add(tf_lName.getText());
-            list.add(tf_email.getText());
-            list.add(tf_contact.getText());
-            list.add(tf_address1.getText());
-            list.add(tf_address2.getText());
-            list.add(tf_parish.getText());
-            window.close();
+            boolean res = StatusMessage.ConfirmDisplay("Are you sure you want to create this Customer Record?");
+            if (res) {
+                list.add(tf_fName.getText());
+                list.add(tf_lName.getText());
+                list.add(tf_email.getText());
+                list.add(tf_contact.getText());
+                list.add(tf_address1.getText());
+                list.add(tf_address2.getText());
+                list.add(tf_parish.getText());
+                window.close();
+            }
         });
 
         Button cancel_b = new Button("CANCEL");

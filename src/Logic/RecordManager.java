@@ -1,16 +1,15 @@
 package Logic;
 
 import java.util.ArrayList;
+
+import PopUpDisplays.StatusMessage;
+
 import java.sql.*;
 import java.sql.ResultSet;
 
 public class RecordManager {
     private Connection con;
     private String dbUrl = "jdbc:mysql://localhost:3306/fagas?useSSL=true&serverTimezone=UTC";
-    private String firstname, lastname, phone, address1, address2, parish, email;
-    private int id;
-    private int res = -2;
-    private ResultSet result;
 
     public static ArrayList<CustomerRecord> recordList;
 
@@ -19,11 +18,9 @@ public class RecordManager {
             Connection conn = DriverManager.getConnection(dbUrl, "root", "");
             setConnection(conn);
         } catch (SQLException e) {
-            e.printStackTrace();
+            StatusMessage.DisplayMessage("Unable to connect to database");
         }
-        // getRecord();
 
-        recordList = new ArrayList<CustomerRecord>();
         GenerateRecordList();
     }
 
@@ -32,6 +29,7 @@ public class RecordManager {
     }
 
     private void GenerateRecordList() {
+        recordList = new ArrayList<CustomerRecord>();
         try {
             String sql = "SELECT * FROM custrecords";
             Statement stmt = con.createStatement();
@@ -44,24 +42,33 @@ public class RecordManager {
                         res.getString(7), res.getString(8));
                 recordList.add(temp);
             }
-
-            // CustomerRecord temp = new CustomerRecord(res.getInt(0), res.getString(1),
-            // res.getString(2),
-            // res.getString(3), res.getString(4), res.getString(5), res.getString(6),
-            // res.getString(7));
-            // recordList.add(temp);
-            // res.next();
-
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
+    public int ModifyRecord(ArrayList<String> record) {
+        String sql = "UPDATE custrecords SET firstname='" + record.get(1) + "', lastname='" + record.get(2);
+        sql += "', email='" + record.get(3) + "', phone='" + record.get(4) + "', address1='" + record.get(5);
+        sql += "', address2='" + record.get(6) + "', parish='" + record.get(7) + "' WHERE id = "
+                + String.valueOf(record.get(0));
+
+        int res = -2;
+        try {
+            Statement stmt = con.createStatement();
+            res = stmt.executeUpdate(sql);
+            GenerateRecordList();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return res;
+    }
+
     public int CreateRecord(ArrayList<String> list) {
-        // Setting up Connection with database try {
+        int res = -2;
 
         try {
-            this.con = DriverManager.getConnection(dbUrl, "root", "");
             Statement stmt = con.createStatement();
 
             String query = "INSERT INTO custrecords (firstname,lastname,phone,address1,address2,parish,email) VALUES('";
@@ -73,41 +80,15 @@ public class RecordManager {
             query += list.get(6) + "', '";
             query += list.get(2) + "')";
             res = stmt.executeUpdate(query);
-            con.close();
+
+            if (res == 1)
+                GenerateRecordList();
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
         return res;
-    }
-
-    public void getRecord() {
-
-        try {
-            Statement stmt = con.createStatement();
-
-            String query = "SELECT * FROM custrecords";
-            result = stmt.executeQuery(query);
-
-            while (result.next()) {
-                this.id = result.getInt("id");
-                this.firstname = result.getString("firstname");
-                this.lastname = result.getString("lastname");
-                this.phone = result.getString("phone");
-                this.address1 = result.getString("address1");
-                this.address2 = result.getString("address2");
-                this.parish = result.getString("parish");
-                this.email = result.getString("email");
-                CustomerRecord custrecObj = new CustomerRecord(id, firstname, lastname, phone, address1, address2,
-                        parish, email);
-                recordList.add(custrecObj);
-            }
-
-            con.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
     }
 }
 

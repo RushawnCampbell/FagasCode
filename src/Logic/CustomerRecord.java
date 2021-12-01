@@ -2,7 +2,7 @@ package Logic;
 
 public class CustomerRecord {
     private String firstname, lastname, phone, address1, address2, parish, email;
-    public int customerID;
+    private int customerID;
 
     public CustomerRecord(int id, String firstname, String lastname, String phone, String address1, String address2,
             String parish, String email) {
