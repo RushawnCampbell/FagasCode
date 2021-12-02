@@ -174,7 +174,7 @@ public class UIManager {
         vLayout.getChildren().add(homeButton);
         switch (currentUser.getUserType().toString()) {
             case ("CEO"):
-                vLayout.getChildren().add(reports);
+                // vLayout.getChildren().add(reports);
                 vLayout.getChildren().add(manageRecords);
                 vLayout.getChildren().add(manageRequest);
                 vLayout.getChildren().add(manageChangeReq);
