@@ -46,8 +46,8 @@ public class UIManager {
 
     public UIManager(Stage primaryStage) {
         window = primaryStage;
-        auth = new Authenticator();
         recordManager = new RecordManager();
+        auth = new Authenticator();
         serviceManager = new ServiceManager();
         changeRequestManager = new ChangeRequestManager();
     }
@@ -66,12 +66,13 @@ public class UIManager {
     }
 
     public void LoadRecordManagerDisplay() {
+        recordManager.GenerateRecordList();
         recordManagerDisplay = new RecordManagerDisplay(window, this, recordManager);
         recordManagerDisplay.LoadDisplay(layout);
     }
 
     public void LoadServiceManagerDisplay() {
-        serviceManagerDisplay = new ServiceManagerDisplay(window, this, serviceManager);
+        serviceManagerDisplay = new ServiceManagerDisplay(window, this, serviceManager, recordManager);
         serviceManagerDisplay.LoadDisplay(layout);
     }
 
@@ -86,12 +87,12 @@ public class UIManager {
     }
 
     public void LoadChangeRequestDisplay() {
-        changeRequestDisplay = new ChangeRequestDisplay(window, this, changeRequestManager);
+        changeRequestDisplay = new ChangeRequestDisplay(window, this, changeRequestManager, recordManager);
         changeRequestDisplay.LoadDisplay(layout);
     }
 
     public void LoadServiceListDisplay() {
-        serviceListDisplay = new ServiceListDisplay(window, this, serviceManager);
+        serviceListDisplay = new ServiceListDisplay(window, this, serviceManager, recordManager);
         serviceListDisplay.LoadDisplay(layout);
     }
 

@@ -89,7 +89,7 @@ public class RecordManagerDisplay {
         recordTable.add(idLabel, 0, 0, 1, 1);
         recordTable.add(nameLabel, 1, 0, 1, 1);
         recordTable.add(contactLabel, 2, 0, 1, 1);
-        ArrayList<CustomerRecord> list = RecordManager.recordList;
+        ArrayList<CustomerRecord> list = recordManager.getRecordList();
 
         int a = 0;
         for (int i = 1; i < list.size() + 1; i++) {

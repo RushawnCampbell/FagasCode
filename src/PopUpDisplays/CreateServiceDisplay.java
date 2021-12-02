@@ -24,9 +24,10 @@ public class CreateServiceDisplay {
     private Scene scene1;
     private ArrayList<String> formData;
     private String selectedCustomer;
+    private RecordManager recordManager;
 
-    public CreateServiceDisplay() {
-
+    public CreateServiceDisplay(RecordManager recordManager) {
+        this.recordManager = recordManager;
     }
 
     public ArrayList<String> LoadDisplay() {
@@ -42,13 +43,11 @@ public class CreateServiceDisplay {
         Label nameLabel = new Label("Customer Name");
         Label contactLabel = new Label("Contact Number");
 
-        VBox layout = new VBox();
-
         GridPane recordTable = new GridPane();
         recordTable.add(idLabel, 0, 0, 1, 1);
         recordTable.add(nameLabel, 1, 0, 1, 1);
         recordTable.add(contactLabel, 2, 0, 1, 1);
-        ArrayList<CustomerRecord> list = RecordManager.recordList;
+        ArrayList<CustomerRecord> list = recordManager.getRecordList();
 
         ScrollPane scroll = new ScrollPane(recordTable);
         scroll.setMaxHeight(500);
@@ -79,6 +78,9 @@ public class CreateServiceDisplay {
         recordTable.setVgap(20);
         recordTable.setHgap(20);
 
+        VBox layout = new VBox();
+        layout.setPadding(new Insets(20));
+        layout.setSpacing(15);
         layout.getChildren().addAll(descLabel, scroll, b_cancel);
         layout.setAlignment(Pos.CENTER);
 
@@ -89,7 +91,7 @@ public class CreateServiceDisplay {
     }
 
     private void SelectCustomer(int index) {
-        selectedCustomer = String.valueOf(RecordManager.recordList.get(index).getId());
+        selectedCustomer = String.valueOf(recordManager.getRecordList().get(index).getId());
     }
 
     private void LoadForm() {
@@ -109,8 +111,6 @@ public class CreateServiceDisplay {
 
         final ComboBox<String> typeDropdown = new ComboBox<String>(typeOptions);
         typeDropdown.setPromptText("Service Type");
-
-        VBox layout = new VBox();
 
         Button b_create = new Button("CREATE");
         b_create.setOnAction(e -> {
@@ -137,10 +137,13 @@ public class CreateServiceDisplay {
         gridLayout.add(b_cancel, 1, 2, 1, 1);
         gridLayout.setVgap(15);
         gridLayout.setHgap(15);
+        gridLayout.setAlignment(Pos.CENTER);
 
+        VBox layout = new VBox();
         layout.getChildren().addAll(title_l, descr_l, gridLayout);
-        layout.setAlignment(Pos.CENTER);
+        layout.setAlignment(Pos.TOP_CENTER);
         layout.setSpacing(30);
+        layout.setPadding(new Insets(20));
         layout.setMinWidth(400);
 
         Scene scene = new Scene(layout);

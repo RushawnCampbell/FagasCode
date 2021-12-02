@@ -20,7 +20,7 @@ import javafx.stage.Stage;
 public class ServiceListDisplay {
 
     // private UIManager uiManager;
-    // private ServiceManager serviceManager;
+    private ServiceManager serviceManager;
     private Stage window;
     private Label titleLabel, idLabel, nameLabel, typeLabel, statusLabel, instructionLabel;
     private Button createRecord;
@@ -28,11 +28,15 @@ public class ServiceListDisplay {
     private ScrollPane scroll;
     private VBox centerLayout;
     private ArrayList<Integer> selectedServices;
+    private RecordManager recordManager;
+    private BorderPane bLayout;
 
-    public ServiceListDisplay(Stage primaryStage, UIManager uiMngr, ServiceManager srvcMngr) {
+    public ServiceListDisplay(Stage primaryStage, UIManager uiMngr, ServiceManager srvcMngr,
+            RecordManager recordManager) {
         window = primaryStage;
         // uiManager = uiMngr;
-        // serviceManager = srvcMngr;
+        serviceManager = srvcMngr;
+        this.recordManager = recordManager;
         InitializeAttributes();
     }
 
@@ -58,7 +62,7 @@ public class ServiceListDisplay {
         table.setVgap(5);
         AddTable();
 
-        createRecord.setOnAction(e -> PrintCheckBoxes());
+        createRecord.setOnAction(e -> LoadServiceList());
 
         scroll.setMaxHeight(500);
         scroll.setPadding(new Insets(10, 10, 10, 10));
@@ -81,7 +85,7 @@ public class ServiceListDisplay {
         for (int i = 0; i < list.size(); i++) {
             if (list.get(i).getStatus().equals("Incomplete")) {
                 String name = "";
-                for (CustomerRecord rec : RecordManager.recordList) {
+                for (CustomerRecord rec : recordManager.getRecordList()) {
                     if (rec.getId() == list.get(i).getCustomerId()) {
                         name = rec.getFirst() + " " + rec.getLast();
                     }
@@ -116,15 +120,45 @@ public class ServiceListDisplay {
         }
     }
 
-    public void PrintCheckBoxes() {
-        String msg = "CheckBoxes: ";
+    public void LoadServiceList() {
+        VBox layout = new VBox();
+        layout.setSpacing(30);
+        layout.setAlignment(Pos.TOP_CENTER);
+        layout.setPadding(new Insets(20));
+        Button b_cancel = new Button("CANCEL");
+        b_cancel.setOnAction(e -> bLayout.setCenter(centerLayout));
+
         for (int i = 0; i < selectedServices.size(); i++) {
-            msg += selectedServices.get(i) + ", ";
+            ServiceRequest service = serviceManager.getService(selectedServices.get(i));
+
+            Label serId = new Label("Service ID: " + service.getServiceId());
+            Label custId = new Label("Customer ID: " + service.getCustomerId());
+            Label type = new Label("ServiceType: " + service.getType());
+            Label price = new Label("Price: JMD$ " + service.getPrice());
+            Label quant = new Label("Quantity: " + service.getQuantity());
+            Label date = new Label("Date Created: " + service.getDateCreated());
+
+            GridPane temp = new GridPane();
+            temp.setHgap(30);
+            temp.setVgap(15);
+            temp.setAlignment(Pos.CENTER);
+            temp.setPadding(new Insets(20));
+            temp.add(serId, 0, 0);
+            temp.add(custId, 1, 0);
+            temp.add(price, 0, 1);
+            temp.add(quant, 1, 1);
+            temp.add(type, 0, 2);
+            temp.add(date, 1, 2);
+            layout.getChildren().add(temp);
         }
-        System.out.println(msg);
+        layout.getChildren().add(b_cancel);
+
+        ScrollPane scroll = new ScrollPane(layout);
+        bLayout.setCenter(scroll);
     }
 
     public void LoadDisplay(BorderPane blayout) {
+        this.bLayout = blayout;
         ConfigureAttributes(blayout);
         window.setTitle("Service List Generator");
         window.show();

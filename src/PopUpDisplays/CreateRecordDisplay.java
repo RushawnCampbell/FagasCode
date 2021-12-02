@@ -43,6 +43,7 @@ public class CreateRecordDisplay {
         VBox layout = new VBox();
 
         Button b_create = new Button("CREATE");
+        b_create.setAlignment(Pos.CENTER);
         b_create.setOnAction(e -> {
             boolean res = StatusMessage.ConfirmDisplay("Are you sure you want to create this Customer Record?");
             if (res) {
@@ -59,19 +60,21 @@ public class CreateRecordDisplay {
 
         Button cancel_b = new Button("CANCEL");
         cancel_b.setOnAction(e -> window.close());
+        cancel_b.setAlignment(Pos.CENTER);
 
         GridPane gridLayout = new GridPane();
-        gridLayout.add(tf_fName, 0, 0, 1, 1);
-        gridLayout.add(tf_lName, 1, 0, 1, 1);
-        gridLayout.add(tf_email, 2, 0, 1, 1);
-        gridLayout.add(tf_contact, 0, 1, 1, 1);
-        gridLayout.add(tf_address1, 0, 2, 1, 1);
-        gridLayout.add(tf_address2, 1, 2, 1, 1);
-        gridLayout.add(tf_parish, 2, 2, 1, 1);
-        gridLayout.add(b_create, 0, 3, 1, 1);
-        gridLayout.add(cancel_b, 2, 3, 1, 1);
+        gridLayout.add(tf_fName, 0, 0);
+        gridLayout.add(tf_lName, 1, 0);
+        gridLayout.add(tf_email, 2, 0);
+        gridLayout.add(tf_contact, 0, 1);
+        gridLayout.add(tf_address1, 0, 2);
+        gridLayout.add(tf_address2, 1, 2);
+        gridLayout.add(tf_parish, 2, 2);
+        gridLayout.add(b_create, 0, 3);
+        gridLayout.add(cancel_b, 2, 3);
         gridLayout.setVgap(15);
         gridLayout.setHgap(15);
+        gridLayout.setAlignment(Pos.CENTER);
 
         layout.getChildren().addAll(title_l, descr_l, gridLayout);
         layout.setAlignment(Pos.CENTER);

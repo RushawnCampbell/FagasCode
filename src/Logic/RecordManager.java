@@ -10,8 +10,7 @@ import java.sql.ResultSet;
 public class RecordManager {
     private Connection con;
     private String dbUrl = "jdbc:mysql://localhost:3306/fagas?useSSL=true&serverTimezone=UTC";
-
-    public static ArrayList<CustomerRecord> recordList;
+    private static ArrayList<CustomerRecord> recordList;
 
     public RecordManager() {
         try {
@@ -28,7 +27,7 @@ public class RecordManager {
         this.con = conn;
     }
 
-    private void GenerateRecordList() {
+    public void GenerateRecordList() {
         recordList = new ArrayList<CustomerRecord>();
         try {
             String sql = "SELECT * FROM custrecords";
@@ -37,13 +36,13 @@ public class RecordManager {
 
             while (res.next()) {
 
-                CustomerRecord temp = new CustomerRecord(res.getInt(1), res.getString(2),
-                        res.getString(3), res.getString(4), res.getString(5), res.getString(6),
-                        res.getString(7), res.getString(8));
+                CustomerRecord temp = new CustomerRecord(res.getInt("id"), res.getString("firstname"),
+                        res.getString("lastname"), res.getString("phone"), res.getString("address1"),
+                        res.getString("address2"), res.getString("parish"), res.getString("email"));
                 recordList.add(temp);
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            StatusMessage.DisplayMessage("Unable to connect to database");
         }
     }
 
@@ -85,10 +84,25 @@ public class RecordManager {
                 GenerateRecordList();
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            StatusMessage.DisplayMessage("Unable to connect to database");
         }
 
         return res;
+    }
+
+    public static CustomerRecord getRecord(int id) {
+        CustomerRecord temp = new CustomerRecord(0, "firstname", "lastname", "phone", "address1", "address2", "parish",
+                "email");
+        for (CustomerRecord record : recordList) {
+            if (record.getId() == id)
+                temp = record;
+        }
+
+        return temp;
+    }
+
+    public ArrayList<CustomerRecord> getRecordList() {
+        return recordList;
     }
 }
 

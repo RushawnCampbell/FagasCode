@@ -1,6 +1,11 @@
 package UIElements;
 
+import java.util.ArrayList;
+
+import Logic.ChangeRequest;
 import Logic.ChangeRequestManager;
+import PopUpDisplays.ChangeReqView;
+import PopUpDisplays.StatusMessage;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -13,18 +18,18 @@ import javafx.stage.Stage;
 
 public class ChangeReqManagerDisplay {
 
-    // private UIManager uiManager;
-    // private ChangeRequestManager changeRequestManager;
+    private UIManager uiManager;
+    private ChangeRequestManager changeRequestManager;
     private Stage window;
-    private Label titleLabel, idLabel, nameLabel, requestByLabel;
+    private Label titleLabel, idLabel, nameLabel;
     private GridPane table;
     private ScrollPane scroll;
     private VBox centerLayout;
 
     public ChangeReqManagerDisplay(Stage primaryStage, UIManager uiMngr, ChangeRequestManager chngRqMngr) {
         window = primaryStage;
-        // uiManager = uiMngr;
-        // changeRequestManager = chngRqMngr;
+        uiManager = uiMngr;
+        changeRequestManager = chngRqMngr;
         InitializeAttributes();
     }
 
@@ -32,7 +37,6 @@ public class ChangeReqManagerDisplay {
         titleLabel = new Label("Change Request Manager");
         idLabel = new Label("ID");
         nameLabel = new Label("Customer Name");
-        requestByLabel = new Label("Requested by");
 
         table = new GridPane();
         centerLayout = new VBox();
@@ -56,26 +60,34 @@ public class ChangeReqManagerDisplay {
     }
 
     private void AddTable() {
+        ArrayList<ChangeRequest> list = ChangeRequestManager.changeReqList;
         table.add(idLabel, 0, 0, 1, 1);
         table.add(nameLabel, 1, 0, 1, 1);
-        table.add(requestByLabel, 2, 0, 1, 1);
 
-        for (int i = 1; i < 30; i++) {
-            Label temp = new Label(String.valueOf(i));
-            table.add(temp, 0, i, 1, 1);
+        int row = 1;
+        for (int i = 0; i < list.size(); i++) {
+            ChangeRequest changeReq = list.get(i);
+            Label temp = new Label(String.valueOf(changeReq.getId()));
+            table.add(temp, 0, row, 1, 1);
 
-            temp = new Label("Customer" + i);
-            table.add(temp, 1, i, 1, 1);
-
-            if (i % 4 == 0) {
-                temp = new Label("Cashier1");
-            } else {
-                temp = new Label("Cashier2");
-            }
-            table.add(temp, 2, i, 1, 1);
+            String name = changeReq.getOldRecord().getFirst() + " " + changeReq.getOldRecord().getLast();
+            temp = new Label(name);
+            table.add(temp, 1, row, 1, 1);
 
             Button viewButton = new Button("View");
-            table.add(viewButton, 3, i, 1, 1);
+            viewButton.setOnAction(e -> {
+                int res = 0;
+                ArrayList<String> info = ChangeReqView.LoadDisplay(changeReq);
+                if (info.size() > 0) {
+                    res = changeRequestManager.AcceptChangeRequest(info);
+                }
+                if (res == 1) {
+                    StatusMessage.DisplayMessage("Change Request was accepted successfully");
+                    uiManager.LoadChangeReqManagerDisplay();
+                }
+            });
+            table.add(viewButton, 2, row, 1, 1);
+            row++;
         }
     }
 

@@ -54,14 +54,6 @@ public class ServiceManager {
         int res = -2;
 
         try {
-            /*
-             * index 0 = Service Type
-             * index 1 = comments
-             * index 2 = price
-             * index 3 = quantity
-             * index 4 = customer id
-             * Remember to insert "incomplete" as default for status
-             */
             Statement stmt = con.createStatement();
 
             Timestamp timestamp = new Timestamp(System.currentTimeMillis());
@@ -75,7 +67,6 @@ public class ServiceManager {
             query += timestamp.toString() + "')";
 
             res = stmt.executeUpdate(query);
-            System.out.println(query);
             if (res == 1)
                 GenerateServiceReqList();
 
@@ -103,6 +94,16 @@ public class ServiceManager {
         return res;
     }
 
-    public void DeleteService(int serviceId) {
+    public ServiceRequest getService(Integer id) {
+        ServiceRequest service = new ServiceRequest(0, 0, "type", 0, 0, "comments", "status",
+                new Timestamp(System.currentTimeMillis()));
+
+        for (ServiceRequest ser : serviceReqList) {
+            if (ser.getServiceId() == id) {
+                service = ser;
+            }
+        }
+        return service;
     }
+
 }

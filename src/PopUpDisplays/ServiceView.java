@@ -6,6 +6,8 @@ import Logic.ServiceManager;
 import Logic.ServiceRequest;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
@@ -67,12 +69,6 @@ public class ServiceView {
         b_close.setOnAction(e -> window.close());
         Button b_cancel = new Button("CANCEL");
         b_cancel.setOnAction(e -> window.setScene(viewScene));
-        Button b_delete = new Button("DELETE");
-        b_delete.setOnAction(e -> {
-            boolean res = StatusMessage.ConfirmDisplay("Are you sure you want to delete this service request?");
-            if (res)
-                serviceManager.DeleteService(service.getServiceId());
-        });
         Button b_submit = new Button("SUBMIT");
         b_submit.setOnAction(e -> {
             boolean res = StatusMessage.ConfirmDisplay("Are you sure you want to save these Changes?");
@@ -105,9 +101,10 @@ public class ServiceView {
         labelGrid.add(l_date, 1, 3);
         labelGrid.add(b_modify, 0, 4);
         labelGrid.add(b_close, 1, 4);
-        // labelGrid.add(b_delete, 0, 3);
         labelGrid.setVgap(15);
-        labelGrid.setHgap(15);
+        labelGrid.setHgap(30);
+        labelGrid.setAlignment(Pos.TOP_CENTER);
+        labelGrid.setPadding(new Insets(20));
 
         textGrid.add(l_serviceId2, 0, 0);
         textGrid.add(l_custId2, 1, 0);
@@ -120,7 +117,9 @@ public class ServiceView {
         textGrid.add(b_submit, 1, 4);
         textGrid.add(b_cancel, 0, 4);
         textGrid.setVgap(15);
-        textGrid.setHgap(15);
+        textGrid.setHgap(30);
+        textGrid.setAlignment(Pos.TOP_CENTER);
+        textGrid.setPadding(new Insets(20));
 
         window.setScene(viewScene);
         window.showAndWait();

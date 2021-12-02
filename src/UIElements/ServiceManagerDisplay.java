@@ -28,11 +28,14 @@ public class ServiceManagerDisplay {
     private GridPane table;
     private ScrollPane scroll;
     private VBox centerLayout;
+    private RecordManager recordManager;
 
-    public ServiceManagerDisplay(Stage primaryStage, UIManager uiMngr, ServiceManager srvcMngr) {
+    public ServiceManagerDisplay(Stage primaryStage, UIManager uiMngr, ServiceManager srvcMngr,
+            RecordManager recordManager) {
         window = primaryStage;
         uiManager = uiMngr;
         serviceManager = srvcMngr;
+        this.recordManager = recordManager;
         InitializeAttributes();
     }
 
@@ -59,7 +62,7 @@ public class ServiceManagerDisplay {
         scroll.setPadding(new Insets(10, 10, 10, 10));
 
         createService.setOnAction(e -> {
-            CreateServiceDisplay createService = new CreateServiceDisplay();
+            CreateServiceDisplay createService = new CreateServiceDisplay(recordManager);
             ArrayList<String> info = createService.LoadDisplay();
             if (info.size() > 0) {
                 serviceManager.CreateService(info);
@@ -94,7 +97,7 @@ public class ServiceManagerDisplay {
             info.add(list.get(i).getDateCreated().toString());
 
             String name = "";
-            for (CustomerRecord rec : RecordManager.recordList) {
+            for (CustomerRecord rec : recordManager.getRecordList()) {
                 if (rec.getId() == list.get(i).getCustomerId()) {
                     name = rec.getFirst() + " " + rec.getLast();
                 }

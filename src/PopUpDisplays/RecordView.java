@@ -3,6 +3,8 @@ package PopUpDisplays;
 import java.util.ArrayList;
 
 import Logic.RecordManager;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -82,8 +84,10 @@ public class RecordView {
         textGrid.add(l_id, 1, 3, 1, 1);
         textGrid.add(b_submit, 1, 4, 1, 1);
         textGrid.add(cancel_b, 0, 4, 1, 1);
-        textGrid.setVgap(15);
-        textGrid.setHgap(15);
+        textGrid.setVgap(20);
+        textGrid.setHgap(25);
+        textGrid.setAlignment(Pos.CENTER);
+        textGrid.setPadding(new Insets(20));
 
         labelGrid.add(l_fName, 0, 0, 1, 1);
         labelGrid.add(l_lName, 1, 0, 1, 1);
@@ -95,8 +99,10 @@ public class RecordView {
         labelGrid.add(l_id2, 1, 3, 1, 1);
         labelGrid.add(b_modify, 0, 4, 1, 1);
         labelGrid.add(close_b, 1, 4, 1, 1);
-        labelGrid.setVgap(15);
-        labelGrid.setHgap(15);
+        labelGrid.setVgap(20);
+        labelGrid.setHgap(25);
+        labelGrid.setAlignment(Pos.CENTER);
+        labelGrid.setPadding(new Insets(20));
 
         window.setScene(viewScene);
         window.showAndWait();

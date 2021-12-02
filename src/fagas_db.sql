@@ -38,6 +38,18 @@ CREATE TABLE `custrecords` (
   `email` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+CREATE TABLE `changerequests` (
+  `id` int(11) NOT NULL,
+  `custid` int(11) NOT NULL,
+  `firstname` varchar(255) NOT NULL,
+  `lastname` varchar(255) NOT NULL,
+  `phone` varchar(10) DEFAULT NULL,
+  `address1` varchar(255) DEFAULT NULL,
+  `address2` varchar(255) DEFAULT NULL,
+  `parish` varchar(255) DEFAULT NULL,
+  `email` varchar(255) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
 -- --------------------------------------------------------
 
 --
@@ -53,11 +65,11 @@ CREATE TABLE `login` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 CREATE TABLE `servicerequests`(
-  `id` INT NOT NULL,
+  `id` int(11) NOT NULL,
   `custid` varchar(255) NOT NULL,
   `type` varchar(255) NOT NULL,
   `price` FLOAT NOT NULL,
-  `quantity` INT,
+  `quantity` int(11),
   `comments` TEXT,
   `status` varchar(255) NOT NULL,
   `date_created` DATETIME
@@ -67,9 +79,9 @@ CREATE TABLE `servicerequests`(
 --
 
 INSERT INTO `login` (`id`, `type`, `username`, `password`, `email`) VALUES
-(1, 'CEO', 'Fagas', 'pass', NULL),
-(3, 'Secretary', 'sectest', 'secpass', NULL),
-(5, 'Cashier', 'cashtest', 'cashpass', NULL);
+(1, 'CEO', 'ceo', 'pass', NULL),
+(3, 'Secretary', 'secretary', 'pass', NULL),
+(5, 'Cashier', 'cashier', 'pass', NULL);
 
 --
 -- Indexes for dumped tables
@@ -89,6 +101,9 @@ ALTER TABLE `login`
 
 ALTER TABLE `servicerequests`
   ADD PRIMARY KEY (`id`);
+
+ALTER TABLE `changerequests`
+  ADD PRIMARY KEY (`id`);
 --
 -- AUTO_INCREMENT for dumped tables
 --
@@ -101,11 +116,14 @@ ALTER TABLE `custrecords`
 
 ALTER TABLE `servicerequests`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+ALTER TABLE `changerequests`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `login`
 --
 ALTER TABLE `login`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
